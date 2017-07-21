@@ -31,6 +31,24 @@ router.get('/:id', function(req, res, next) {
 
 });
 
+/*
+    GET /html/:id
+    Required: the id of the job to be returned
+    This endpoint allows a user to easily see the HTML of the completed job as
+    a page in the browser.
+*/
+router.get('/html/:id', function(req, res, next) {
+  if(!req.params.id) {
+    handleError(res, "Invalid request", "Must provide Id parameter", 400);
+  }
+  JobController.getJobHTML(req, res);
+});
+
+
+/*
+  Util function for sending error response.
+*/
+
 function handleError(res, reason, message, code) {
     console.log("ERROR: " + reason);
     res.status(code || 500).json({"error": message});

@@ -73,10 +73,31 @@ var createJob = function(req, res) {
 
 /*
   Find the job by id in the mongoDb database
-  If the job is completed, send the data as html.
-  If not completed, send a message of the status.
+  If the job is completed, send the job as a json response.
+  If not completed, send a message of the job status.
 */
 var getJob = function(req, res) {
+  Job.findById(req.params.id, function (err, job) {
+    if(err != null) {
+      res.json({success: false, error: "Job Not Found!"});
+      return;
+    }
+    if(job.status == 'completed') {
+      res.json({job});
+    }
+    else {
+      var statusString = "Job status: " + job.status;
+      res.json({success: true, message: statusString});
+    }
+  });
+}
+
+
+/*
+  Find the job by id in the mongoDb database, and return the html if the job
+  has been completed. 
+*/
+var getJobHTML = function(req, res) {
   Job.findById(req.params.id, function (err, job) {
     if(err != null) {
       res.json({success: false, error: "Job Not Found!"});
@@ -104,5 +125,7 @@ module.exports = {
   getJob: (req, res) => {
     getJob(req, res);
   },
-
+  getJobHTML: (req, res) => {
+    getJobHTML(req, res);
+  },
 };
