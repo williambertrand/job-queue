@@ -1,7 +1,7 @@
 {
   "name": "bertrand-massdrop-challenge",
   "version": "1.0.0",
-  "description": "",
+  "description": "A job queue, submit jobs which cotnain a url. The html at that url will be downloaded and stored in the mongoDb databse.",
   "main": "app.js",
   "scripts": {
     "start": "node server.js",

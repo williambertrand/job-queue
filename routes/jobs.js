@@ -5,7 +5,6 @@ var JobController = require('../controllers/JobController');
 var JobModel = require('../models/job');
 
 
-
 /*
   POST /
   Create a new job, given a url
@@ -17,10 +16,8 @@ router.post('/', function(req, res, next) {
     handleError(res, "Invalid request", "Must provide Job Url", 400);
   }
   else {
-
+    JobController.createJob(req, res);
   }
-  JobController.createJob(req, res);
-
 });
 
 /*
