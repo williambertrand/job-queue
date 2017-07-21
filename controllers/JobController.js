@@ -40,10 +40,13 @@ var processJob = function(job) {
     res.on('end', function() {
       job.status = 'completed';
       job.save();
+      console.log("Job completed for: " + job.url);
     });
 
   }).on('error', function(e) {
     console.log("Error retreiving html: " + e.message);
+    job.status = "Error Occured";
+    job.save();
   });
 }
 
@@ -61,7 +64,7 @@ var createJob = function(req, res) {
       res.json({success: false, error: "Error saving new job."});
       return;
     }
-    res.json({success: true, message: "Job Created!", jobId: String(job._id)});
+    res.json({success: true, jobId: String(job._id)});
   });
 
   //Add processing of job to the jobQueue
@@ -70,15 +73,17 @@ var createJob = function(req, res) {
 
 /*
   Find the job by id in the mongoDb database
+  If the job is completed, send the data as html.
+  If not completed, send a message of the status.
 */
 var getJob = function(req, res) {
   Job.findById(req.params.id, function (err, job) {
     if(err != null) {
-      res.json({success: false, message: "Job Not Found!"});
+      res.json({success: false, error: "Job Not Found!"});
       return;
     }
     if(job.status == 'completed') {
-      res.json({success: true, data: job.data});
+      res.send(job.data);
     }
     else {
       var statusString = "Job status: " + job.status;
@@ -87,7 +92,7 @@ var getJob = function(req, res) {
   });
 }
 
-//Begin the queue
+//Start the queue so it is ready to have jobs pushed to it.
 jobQueue.start(function(err) {
   console.log('Awaiting jobs...');
 });

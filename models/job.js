@@ -3,19 +3,17 @@ mongoose.Promise = require('bluebird');
 var Schema = mongoose.Schema;
 
 /*
-    The schema for a job
+    The schema for a Job Object
 
     A job has:
       _id
-      status: [],
-      statusCode,
-      url,
-      data
+      status: pending / processing / complete / error occured,
+      url: the url to download the html of,
+      data: the downloaded html
 */
 
 var JobSchema = Schema({
   status: {type: String, required: true, default: 'pending'},
-  statusCode: {type: Number},
   url: {type: String},
   data: {type:String}
 });
