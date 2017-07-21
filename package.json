@@ -1,7 +1,7 @@
 {
   "name": "bertrand-massdrop-challenge",
   "version": "1.0.0",
-  "description": "A job queue, submit jobs which cotnain a url. The html at that url will be downloaded and stored in the mongoDb databse.",
+  "description": "A job queue, submit jobs as POST request with a body that contains a url. The html at that url will be downloaded and stored in the mongoDb databse.",
   "main": "app.js",
   "scripts": {
     "start": "node server.js",
@@ -10,6 +10,7 @@
   "author": "William Bertrand",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "chai": "^4.1.0",
     "express": "^4.15.3",

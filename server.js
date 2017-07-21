@@ -2,13 +2,14 @@ var http = require('http');
 var app = require('./app');
 var mongoose = require('mongoose')
 var config = require('./config')
+mongoose.Promise = require('bluebird');
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 var server = http.createServer(app);
 
 //Connecting MongoDB using mongoose to our application
-mongoose.connect(config.mongoUrl);
+mongoose.connect(config.mongoUrl, { useMongoClient: true });
 
 //This callback will be triggered once the connection is successfully established to MongoDB
 mongoose.connection.on('connected', function () {

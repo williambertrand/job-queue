@@ -8,32 +8,42 @@ var Job = require('../models/job');
 
 var jobQueue = queue();
 
+
+//Remove https:// or http:// from url if it has it at the beginning, since
+//the http .get function will not work with the protocol prefix.
+var parseUrl = function(urlString) {
+  var result = urlString.trim().replace(/(^\w+:|^)\/\//, '');
+  return result;
+}
+
 /*
     processJob:
     Download the html at the url given by job's url property.
 */
-var processJob = function(job){
+var processJob = function(job) {
   job.status = 'processing';
   job.save();
+  var parsedUrl = parseUrl(job.url);
   var params = {
-    host: job.url
+    host: parsedUrl
   }
   job.data = "";
   http.get(params, function(res) {
+
+    //Save html data within the job object's data field.
     res.on("data", function(chunk) {
-      if(chunk != 'undefined') {
-        job.data += chunk;
-        job.save();
-      }
+      job.data += chunk;
+      job.save();
     });
 
+    //Change the status of the job to completed once the html has been saved.
     res.on('end', function() {
       job.status = 'completed';
       job.save();
     });
 
   }).on('error', function(e) {
-    console.log("Got error: " + e.message);
+    console.log("Error retreiving html: " + e.message);
   });
 }
 
@@ -64,17 +74,18 @@ var createJob = function(req, res) {
 var getJob = function(req, res) {
   Job.findById(req.params.id, function (err, job) {
     if(err != null) {
-      res.json({success: false, message: "Job Not Found!"})
+      res.json({success: false, message: "Job Not Found!"});
       return;
     }
-    res.json({success: true, message: "Job Found!", job: job});
+    if(job.status == 'completed') {
+      res.json({success: true, data: job.data});
+    }
+    else {
+      var statusString = "Job status: " + job.status;
+      res.json({success: true, message: statusString});
+    }
   });
 }
-
-//Log a message when a job on the queue completes
-jobQueue.on('success', function(result, job) {
-  console.log('job finished processing:', job.toString().replace(/\n/g, ''));
-});
 
 //Begin the queue
 jobQueue.start(function(err) {
