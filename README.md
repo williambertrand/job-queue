@@ -1,8 +1,10 @@
 ## Job Queue
-#### Massdrop Coding Challenge
+### Massdrop Coding Challenge
 Submission by William Bertrand.
 
-#### Setup
+Job queue whose workers fetch data from a URL and store the results in a database. The job queue should expose a REST API for adding jobs and checking their status / results.
+
+### Setup
 Install the dependencies:
 ```
 npm install
@@ -26,13 +28,31 @@ Start the server:
 npm start
 ```
 
-To submit a job: 
+#### Submit a job: 
 POST to the /jobs endpoint with a url.
 
 Example:
 ```
 curl -H "Content-Type: application/json" -X POST -d '{"url":"google.com"}' http://localhost:3000/jobs
 ```
+This request will return json containing the fields: `success` and `jobId`
 
-#### Test
+#### Retreive a job
+Submit a get request to `/jobs/:id`
+
+If the job is not complete, a message will be returned describing the job's status. If the job is complete, the html will be returned. 
+
+So entering `http://localhost:3000/jobs/:id` in a browser will give the html page of the job's url.
+
+### Testing
+run the tester.sh script to submit a few jobs to the server, you can add urls to the urlArray in the bash script to submit even more jobs.
+
+```
+bash tester.sh
+```
+
+To run the mocha tests:
+
+```
 npm test
+```
