@@ -40,9 +40,11 @@ This request will return json containing the fields: `success` and `jobId`
 #### Retreive a job
 Submit a get request to `/jobs/:id`
 
-If the job is not complete, a message will be returned describing the job's status. If the job is complete, the html will be returned. 
+If the job is not complete, a message will be returned describing the job's status. If the job is complete, job will be returned as a json object. 
 
-So entering `http://localhost:3000/jobs/:id` in a browser will give the html page of the job's url.
+To retreive just the html of a completed job, use the `/jobs/html` endpoint.
+
+So entering `http://localhost:3000/jobs/html/:id` in a browser will give the html page of the job's url.
 
 ### Testing
 run the tester.sh script to submit a few jobs to the server, you can add urls to the urlArray in the bash script to submit even more jobs.
