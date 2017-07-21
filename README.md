@@ -28,20 +28,17 @@ Start the server:
 npm start
 ```
 
-To submit a job: 
+#### Submit a job: 
 POST to the /jobs endpoint with a url.
 
 Example:
 ```
 curl -H "Content-Type: application/json" -X POST -d '{"url":"google.com"}' http://localhost:3000/jobs
 ```
-This request will return json containing the following fields:
+This request will return json containing the fields: `success` and `jobId`
 
-success: true or false 
-
-jobId: the id of the job that was just created.
-
-To retreive a job, submit a get request to `/jobs/:id`
+#### Retreive a job
+Submit a get request to `/jobs/:id`
 
 If the job is not complete, a message will be returned describing the job's status. If the job is complete, the html will be returned. 
 
